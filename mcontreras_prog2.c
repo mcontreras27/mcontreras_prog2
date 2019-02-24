@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "student_argtok.h"
-#include "student_exec.h"
+#include "mcontreras_argtok.h"
+#include "mcontreras_exec.h"
 
 int main()
 {
