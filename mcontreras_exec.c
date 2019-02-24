@@ -3,6 +3,9 @@
 //	Author: Michael Contreras
 //
 
+#include <unistd.h>
+#include <stdlib.h>
+
 int execBackground(char **args)
 {
     int i;
@@ -26,5 +29,10 @@ int execBackground(char **args)
 
 int executeCmd(char **args)
 {
-  execvp(args[0],args);
+  char ** input = args;
+  if(execBackground(input) == 1)
+    {
+      execvp(input[0],input);
+    }
+  else return 1;
 }
