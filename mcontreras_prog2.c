@@ -1,6 +1,6 @@
 //
 //	EE 4374 Assignment # 2 Shell (Test Function)
-//	Author: ???
+//	Author: Michael Contreras
 //
 
 #include <fcntl.h>

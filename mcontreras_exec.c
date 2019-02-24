@@ -1,6 +1,6 @@
 //
 //	EE 4374 Assignment # 2 Command Executer
-//	Author: ???
+//	Author: Michael Contreras
 //
 
 int execBackground(char **args)
@@ -26,5 +26,5 @@ int execBackground(char **args)
 
 int executeCmd(char **args)
 {
-
+  execvp(args[0],args);
 }
