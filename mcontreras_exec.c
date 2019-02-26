@@ -33,51 +33,45 @@ int execBackground(char **args)
 int executeCmd(char **args)
 {
    char ** input = args;
-     if(execBackground(input) == 1)
-       {
-	 //fprintf(stderr,"\n");
-	 pid_t firstPid;
+    if(execBackground(input) == 1)
+    {
+      pid_t firstPid;
+      firstPid = fork();
+      if(firstPid <0)
+      {
+	fprintf(stderr,"Error forking a process\n");
+	return -1;
+      }
+      else if(firstPid == 0)
+      {
+	printf("\n");
+        execvp(input[0],input);
+      }
+      return 0;
+    }
+    else
+    {
+      pid_t firstPid;
+      /* fork a child process */
+      firstPid = fork();
 
-	 firstPid = fork();
-
-	 if(firstPid <0)
-	   {
-	     fprintf(stderr,"Error forking a process\n");
-	     return -1;
-	   }
-	 else if(firstPid == 0)
-	   {
-	     printf("\n");
-	     execvp(input[0],input);
-	   }
-	 
-	 return 0;
-       }
-     else
-       {
-	 pid_t firstPid;
-
-	 /* fork a child process */
-	 firstPid = fork();
-
-	 if(firstPid < 0)
-	   {
-	     /* Negative process id means there was an error */
-	     fprintf(stderr,"Error forking a process\n");
-	     return -1;
-	   }
-	 else if(firstPid == 0)
-	   {
-	     /* this is the first child process, run "ls -l" */
-	     //execlp("ls","ls","-l", NULL);
-	     execvp(input[0],input);
-	   }
-	 else
-	   {
-	     /* this is the parent, wait for the children to exit */
-	     waitpid(firstPid,NULL,0);/* don't read exit code */
-	   }
-
-	 return 0; /* this will invoke an exit() system call */
-       }
+      if(firstPid < 0)
+      {
+	/* Negative process id means there was an error */
+	fprintf(stderr,"Error forking a process\n");
+	return -1;
+      }
+      else if(firstPid == 0)
+      {
+	/* this is the first child process, run "ls -l" */
+	//execlp("ls","ls","-l", NULL);
+        execvp(input[0],input);
+      }
+      else
+      {
+	/* this is the parent, wait for the children to exit */
+        waitpid(firstPid,NULL,0);/* don't read exit code */
+      }
+      return 0; /* this will invoke an exit() system call */
+    }
 }
