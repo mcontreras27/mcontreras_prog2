@@ -3,7 +3,10 @@
 //	Author: Michael Contreras
 //
 
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 int execBackground(char **args)
@@ -29,10 +32,35 @@ int execBackground(char **args)
 
 int executeCmd(char **args)
 {
-  char ** input = args;
-  if(execBackground(input) == 1)
+   char ** input = args;
+     /*if(execBackground(input) == 1)
     {
       execvp(input[0],input);
+      return 1;
     }
-  else return 1;
+    else return 1;*/
+  pid_t firstPid;
+
+  /* fork a child process */
+  firstPid = fork();
+
+  if(firstPid < 0)
+    {
+      /* Negative process id means there was an error */
+      fprintf(stderr,"Error forking a process\n");
+      return -1;
+    }
+  else if(firstPid == 0)
+    {
+      /* this is the first child process, run "ls -l" */
+      //execlp("ls","ls","-l", NULL);
+      execvp(input[0],input);
+    }
+  else
+    {
+      /* this is the parent, wait for the children to exit */
+      waitpid(firstPid,NULL,0);/* don't read exit code */
+    }
+
+  return 0; /* this will invoke an exit() system call */
 }
